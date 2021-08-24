@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <sys/socket.h>
+#include <poll.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
@@ -38,9 +39,25 @@ int main(int argc, char const *argv[])
 	}
 	printf("Sending..\n");
 	send(sock , request , strlen(request) , 0 );
-	printf("Receiving..\n");
-	valread = read( sock , buffer, 1024);
-	printf("%s\n",buffer );
+
+	struct pollfd fd;
+	int ret;
+	fd.fd = sock;
+	fd.events = POLLIN;
+
+	int patience=10;
+	while (patience-->0) {
+		ret = poll(&fd,1,2000);
+		if (ret<=0) {
+			printf("Waiting..\n");
+		} else {
+			printf("Receiving..\n");
+			recv(sock,buffer,sizeof(buffer),0);
+			printf("%s\n",buffer );
+			break;
+		}
+	}
+	//valread = read( sock , buffer, 1024);
 	return 0;
 }
 

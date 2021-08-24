@@ -61,6 +61,13 @@ int main(int argc, char const *argv[])
     printf("Reading..\n");
     valread = read( new_socket , buffer, 1024);
     printf("%s\n",buffer );
+
+    int seconds = 10;
+    while (seconds-->0) {
+	    printf("Working..\n");
+	    sleep(1);
+    }
+
     printf("Writing..\n");
     send(new_socket , request , strlen(request) , 0 );
     printf("DONE\n");
